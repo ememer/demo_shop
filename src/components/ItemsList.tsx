@@ -1,28 +1,34 @@
 import React, { useEffect, useState } from 'react';
 
-import { Col, Image, Row } from 'react-bootstrap';
+import { Col, Row } from 'react-bootstrap';
+
+import { ResponseObject } from '../types/ResponseTypes';
+
+import ItemCard from './ItemCard';
 
 const ItemsList = () => {
-  const [itemsList, setItemsList] = useState([]);
+  const [itemsList, setItemsList] = useState<ResponseObject[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const getItemsList = async () => {
       const URL = 'https://fakestoreapi.com/products';
       try {
-        const response = await fetch(URL);
+        const response: Response = await fetch(URL);
         if (!response.ok) {
           if (`${response.status}`.startsWith('3')) {
-            console.log('Błędne wykonane żądanie:', response.status);
+            alert(`Błędne wykonane żądanie: ${response.status}`);
           }
           if (`${response.status}`.startsWith('4')) {
-            console.log('Nie znaleziono wyników:', response.status);
+            alert(`Nie znaleziono wyników: ${response.status}`);
           }
           if (`${response.status}`.startsWith('5')) {
-            console.log('Błąd połączenia z serwerem:', response.status);
+            alert(`Błąd połączenia z serwerem: ${response.status}`);
           }
         }
-        const json = await response.json();
+        const json: ResponseObject[] = await response.json();
         setItemsList(json);
+        setIsLoading(false);
       } catch (err) {
         return console.warn((err as Error).message);
       }
@@ -33,23 +39,29 @@ const ItemsList = () => {
   console.log(itemsList);
   return (
     <div>
-      {itemsList[0]?.image && (
+      {isLoading ? (
         <Row md={4}>
-          <Col>
-            <Image fluid rounded={true} src={itemsList[0].image} />
+          <Col className="placeholder-glow border-dark rounded-lg p-4">
+            <span className="placeholder col-4" />
           </Col>
-          <Col>
-            <Image fluid rounded={true} src={itemsList[1].image} />
+          <Col className="placeholder-glow border-dark rounded-lg p-4">
+            <span className="placeholder col-4" />
           </Col>
-          <Col>
-            <Image fluid rounded={true} src={itemsList[2].image} />
+          <Col className="placeholder-glow border-dark rounded-lg p-4">
+            <span className="placeholder col-4" />
           </Col>
-          <Col>
-            <Image fluid rounded={true} src={itemsList[3].image} />
+          <Col className="placeholder-glow border-dark rounded-lg p-4">
+            <span className="placeholder col-4" />
           </Col>
-          <Col>
-            <Image fluid rounded={true} src={itemsList[3].image} />
+          <Col className="placeholder-glow border-dark rounded-lg p-4">
+            <span className="placeholder col-4" />
           </Col>
+        </Row>
+      ) : (
+        <Row className="p-4 g-5 card-group align-items-end" md={2}>
+          {itemsList.map((productItem, index) => (
+            <ItemCard key={index} props={productItem} />
+          ))}
         </Row>
       )}
     </div>
