@@ -1,5 +1,6 @@
 import React from 'react';
 
+import ItemsList from './components/ItemsList';
 import Layout from './components/Layout';
 
 import 'bootstrap-icons/font/bootstrap-icons.css';
@@ -10,10 +11,7 @@ function App() {
   return (
     <div className="App">
       <Layout>
-        <div className="container py-4 px-3 mx-auto">
-          <h1>Hello, Bootstrap and Vite!</h1>
-          <button className="btn bg-primary">Primary button</button>
-        </div>
+        <ItemsList />
       </Layout>
     </div>
   );
