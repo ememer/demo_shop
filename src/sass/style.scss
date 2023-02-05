@@ -1,0 +1,95 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@200;400;700&display=swap');
+
+@import '../node_modules/bootstrap/scss/functions';
+
+// Default variable overrides
+body {
+  font-family: 'poppins' !important;
+}
+
+$fuchsia: #8d72e1;
+$purple: #6c4ab6;
+$teapotBlue: #8d9eff;
+$warmRed: #e0144c;
+$satinDarkBlue: #404258;
+$pastelOrange: #ffd372;
+$grass: #b6e388;
+$pastelLightBlue: #eef1ff;
+$lightGray: #3ccf4e;
+$darkBg: #e8ebf9;
+
+$body-color: #16213e;
+$body-bg: $pastelLightBlue;
+
+// Merge the maps
+
+$theme-colors: (
+  'primary': $fuchsia,
+  'secondary': $purple,
+  'success': $grass,
+  'info': $teapotBlue,
+  'warning': $pastelOrange,
+  'danger': $warmRed,
+  'light': $pastelLightBlue,
+  'dark': $satinDarkBlue,
+);
+
+$custom-Color: (
+  'darkBg': $darkBg,
+);
+
+$theme-colors: map-merge($theme-colors, $custom-Color);
+
+// Required
+@import '../node_modules/bootstrap/scss/variables';
+@import '../node_modules/bootstrap/scss/maps';
+@import '../node_modules/bootstrap/scss/mixins';
+@import '../node_modules/bootstrap/scss/root';
+
+@import '../node_modules/bootstrap/scss/utilities';
+@import '../node_modules/bootstrap/scss/utilities/api';
+
+$utilities: map-merge(
+  $utilities,
+  (
+    'background-color': (
+      map-merge(
+        map-get($utilities, 'background-color'),
+        (
+          values: (
+            map-merge(
+              map-get(map-get($utilities, 'background-color'), 'values'),
+              ($theme-colors)
+            ),
+          ),
+        )
+      ),
+    ),
+  )
+);
+
+@each $color, $value in $theme-colors {
+  .btn-#{$color} {
+    @if $color == 'light' {
+      @include button-variant(
+        $value,
+        $value,
+        $hover-background: shade-color($value, $btn-hover-bg-shade-amount),
+        $hover-border: shade-color($value, $btn-hover-border-shade-amount),
+        $active-background: shade-color($value, $btn-active-bg-shade-amount),
+        $active-border: shade-color($value, $btn-active-border-shade-amount)
+      );
+    } @else if $color == 'dark' {
+      @include button-variant(
+        $value,
+        $value,
+        $hover-background: tint-color($value, $btn-hover-bg-tint-amount),
+        $hover-border: tint-color($value, $btn-hover-border-tint-amount),
+        $active-background: tint-color($value, $btn-active-bg-tint-amount),
+        $active-border: tint-color($value, $btn-active-border-tint-amount)
+      );
+    } @else {
+      @include button-variant($value, $value);
+    }
+  }
+}
