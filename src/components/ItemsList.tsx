@@ -58,7 +58,7 @@ const ItemsList = () => {
           </Col>
         </Row>
       ) : (
-        <Row className="p-4 g-5 card-group align-items-end" md={2}>
+        <Row className="px-4 g-4" sm={1} md={2}>
           {itemsList.map((productItem, index) => (
             <ItemCard key={index} props={productItem} />
           ))}
