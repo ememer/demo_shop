@@ -53,16 +53,13 @@ const ItemsList = () => {
           <Col className="placeholder-glow border-dark rounded-lg p-4">
             <span className="placeholder col-4" />
           </Col>
-          <Col className="placeholder-glow border-dark rounded-lg p-4">
-            <span className="placeholder col-4" />
-          </Col>
         </Row>
       ) : (
-        <Row className="px-4 g-4" sm={1} md={2}>
+        <div className="px-4 g-4 row row-cols-1 row-cols-md-2 g-4">
           {itemsList.map((productItem, index) => (
             <ItemCard key={index} props={productItem} />
           ))}
-        </Row>
+        </div>
       )}
     </div>
   );
