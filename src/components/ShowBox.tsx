@@ -3,7 +3,7 @@ import React from 'react';
 const ShowBox = () => {
   return (
     <div className="my-5 p-4">
-      <div className="row row-cols-2 my-2 bg-white shadow-sm rounded-4 h-100 min-vh-70 p-4">
+      <div className="row row-cols-2 my-2 bg-white  h-100 min-vh-70 p-4">
         <div className="col-6 p-0">
           <img
             className="img-fluid rounded-4"
@@ -43,8 +43,24 @@ const ShowBox = () => {
               </select>
             </div>
             <div className="col-12 my-2">
-              <legend className="fw-light fs-6 m-0">Model:</legend>{' '}
-              <span className="fw-semibold fs-6">Some model</span>
+              <legend className="p-0 w-auto fw-light fs-6 m-0">Model:</legend>
+              <span className="p-0 fw-semibold ms-2 fs-6">Some model</span>
+            </div>
+            <div className="col-12 my-2 ">
+              <legend className="col-12 p-0 w-auto fw-light fs-6 m-0">Ilość:</legend>
+              <div className="row">
+                <div className="col-6 my-3">
+                  <div className="row row-col-3 text-center rounded rounded-4  overflow-hidden">
+                    <button className="col-3 px-0 py-1 bg-primary border-0 text-white">
+                      -
+                    </button>
+                    <div className="col px-0 py-1 bg-light">1</div>
+                    <button className="col-3 px-0 py-1 bg-primary border-0 text-white">
+                      +
+                    </button>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>

@@ -9,7 +9,7 @@ import './sass/style.scss';
 
 function App() {
   return (
-    <div className="App clearfix">
+    <div className="App clearfix bg-white">
       <Layout>
         <MainPage />
       </Layout>

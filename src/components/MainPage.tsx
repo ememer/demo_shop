@@ -1,14 +1,14 @@
 import React from 'react';
 
 import CardGrids from './CardsGrid';
-import ShowBox from './ShowBoc';
+import ShowBox from './ShowBox';
 
 import '../sass/custom/MainPage.scss';
 
 const MainPage = () => {
   return (
     <>
-      <div style={{ marginTop: '10rem' }} className="row justify-content-center">
+      <div style={{ marginTop: '10rem' }} className="p-4 row justify-content-center">
         <div className="col-6 p-1">
           <button className="border-0 hover p-0 m-0 position-relative">
             <img
