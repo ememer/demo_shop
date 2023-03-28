@@ -51,6 +51,16 @@ $theme-colors: map-merge($theme-colors, $custom-Color);
 $utilities: map-merge(
   $utilities,
   (
+    'cursor': (
+      property: cursor,
+      values: auto default pointer wait text move help not-allowed,
+    ),
+  )
+);
+
+$utilities: map-merge(
+  $utilities,
+  (
     'min-viewport-height':
       map-merge(
         map-get($utilities, 'min-viewport-height'),
@@ -58,6 +68,32 @@ $utilities: map-merge(
           values:
             map-merge(
               map-get(map-get($utilities, 'min-viewport-height'), 'values'),
+              (
+                10: 10vh,
+                20: 20vh,
+                30: 30vh,
+                40: 40vh,
+                50: 50vh,
+                60: 60vh,
+                70: 70vh,
+                80: 80vh,
+                90: 90vh,
+              )
+            ),
+        )
+      ),
+  )
+);
+$utilities: map-merge(
+  $utilities,
+  (
+    'max-height':
+      map-merge(
+        map-get($utilities, 'max-height'),
+        (
+          values:
+            map-merge(
+              map-get(map-get($utilities, 'max-height'), 'values'),
               (
                 10: 10vh,
                 20: 20vh,
