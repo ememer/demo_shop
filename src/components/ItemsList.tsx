@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 
-import { Col, Row } from 'react-bootstrap';
+import { Row } from 'react-bootstrap';
 
 import { ResponseObject } from '../types/ResponseTypes';
 
@@ -28,7 +28,9 @@ const ItemsList = () => {
         }
         const json: ResponseObject[] = await response.json();
         setItemsList(json);
-        setIsLoading(false);
+        setTimeout(() => {
+          setIsLoading(false);
+        }, 1500);
       } catch (err) {
         return console.warn((err as Error).message);
       }
@@ -36,32 +38,42 @@ const ItemsList = () => {
     getItemsList();
   }, []);
 
-  console.log(itemsList);
+  const add = () => {
+    fetch('https://fakestoreapi.com/products', {
+      method: 'POST',
+      body: JSON.stringify({
+        title: 'test product',
+        price: 13.5,
+        description: 'lorem ipsum set',
+        image: 'https://i.pravatar.cc',
+        category: 'electronic',
+      }),
+    })
+      .then((res) => res.json())
+      .then((json) => console.log(json));
+  };
+
   return (
-    <div>
+    <>
       {isLoading ? (
-        <Row md={4}>
-          <Col className="placeholder-glow border-dark rounded-lg p-4">
-            <span className="placeholder col-4" />
-          </Col>
-          <Col className="placeholder-glow border-dark rounded-lg p-4">
-            <span className="placeholder col-4" />
-          </Col>
-          <Col className="placeholder-glow border-dark rounded-lg p-4">
-            <span className="placeholder col-4" />
-          </Col>
-          <Col className="placeholder-glow border-dark rounded-lg p-4">
-            <span className="placeholder col-4" />
-          </Col>
-        </Row>
-      ) : (
-        <div className="px-4 g-4 row row-cols-1 row-cols-md-2 g-4">
-          {itemsList.map((productItem, index) => (
-            <ItemCard key={index} props={productItem} />
-          ))}
+        <div className="col-12 min-vh-100 d-flex justify-content-center align-items-center">
+          <span className="spinner-grow spinner-grow-sm m-1" role="status" />
+          <span className="spinner-grow spinner-grow-sm m-1" role="status" />
+          <span className="spinner-grow spinner-grow-sm m-1" role="status" />
         </div>
+      ) : (
+        <>
+          <Row>
+            <button onClick={() => add()}>TEST</button>
+          </Row>
+          <Row className="row row-cols-1 row-cols-md-2 g-4">
+            {itemsList.map((productItem, index) => (
+              <ItemCard key={index} props={productItem} />
+            ))}
+          </Row>
+        </>
       )}
-    </div>
+    </>
   );
 };
 

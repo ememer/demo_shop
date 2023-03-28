@@ -9,7 +9,7 @@ import './sass/style.scss';
 
 function App() {
   return (
-    <div className="App">
+    <div className="App clearfix">
       <Layout>
         <ItemsList />
       </Layout>
