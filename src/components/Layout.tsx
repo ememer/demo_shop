@@ -65,8 +65,8 @@ const Layout = ({ children }: Props) => {
           </div>
         </div>
       </header>
-      <main style={{ minHeight: '80dvh' }} className="bg-white my-5">
-        <Container className="p-2 shadow-lg rounded rounded-5">{children}</Container>
+      <main style={{ minHeight: '80dvh' }}>
+        <Container className="p-2">{children}</Container>
       </main>
       <footer className="bg-dark p-3 text-white text-center">
         <Container>

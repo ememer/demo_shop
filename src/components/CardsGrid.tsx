@@ -4,7 +4,7 @@ const arr = [1, 2, 3, 4, 5, 6, 7];
 
 const CardGrids = () => {
   return (
-    <div className="row row-cols-1 row-cols-md-2 px-4 g-5 my-4">
+    <div className="row row-cols-1 row-cols-md-2 p-4 g-5 my-4 shadow-lg">
       {arr.map((el) => (
         <button key={el} className="col border-0 bg-transparent">
           <div className="card h-100 border-0 shadow">
