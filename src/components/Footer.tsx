@@ -9,8 +9,8 @@ const Foother = () => {
             <span className="fw-light">Your</span>Shop
           </div>
         </div>
-        <div className="row row-cols-3 my-4 gap-4">
-          <div className="col-4 mx-auto">
+        <div className="row my-4 gap-4">
+          <div className="col-12 col-lg-4 mx-auto">
             <h3 className="col-12  mb-5 fs-3 fw-bold text-start">
               Subscribe our newsletter
             </h3>
@@ -24,9 +24,9 @@ const Foother = () => {
               className="col-10 my-2 me-auto d-block p-2 border-0 rounded-3"
             />
           </div>
-          <div className="col-3 mx-auto">
+          <div className="col-12 col-lg-3 mx-auto">
             <h3 className="col-12  mb-5 fs-3 fw-bold text-start">Information</h3>
-            <ul className="col-3 list-unstyled text-start">
+            <ul className="col-10 list-unstyled text-start">
               <li className="my-1">About us</li>
               <li className="my-1">Blog</li>
               <li className="my-1">Return policy</li>
@@ -36,7 +36,7 @@ const Foother = () => {
               <li className="my-1">RODO</li>
             </ul>
           </div>
-          <div className="col-4 mx-auto">
+          <div className="col-12 col-lg-4 mx-auto">
             <h3 className="col-12 mb-5 fs-3 fw-bold text-start">Our mission</h3>
             <p className="col-8 fw-light text-start">
               Hi, we are a Polish company. Our products are used by thousands of satisfied
@@ -48,7 +48,7 @@ const Foother = () => {
         </div>
         <div className="row">
           <p className="col text-primary text-start fw-light">
-            Copyright &copy; YourShop
+            {new Date().getFullYear()}, Copyright &copy; YourShop
           </p>
         </div>
       </div>
