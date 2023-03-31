@@ -1,11 +1,11 @@
 import React from 'react';
 
 import Button from 'react-bootstrap/Button';
-import Col from 'react-bootstrap/Col';
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
-import Row from 'react-bootstrap/Row';
 import { Basket, Person, Search } from 'react-bootstrap-icons';
+
+import Foother from './Footer';
 
 interface Props {
   children: React.ReactNode;
@@ -68,13 +68,7 @@ const Layout = ({ children }: Props) => {
       <main style={{ minHeight: '80dvh' }}>
         <Container className="p-2">{children}</Container>
       </main>
-      <footer className="bg-dark p-3 text-white text-center">
-        <Container>
-          <Row>
-            <Col className="text-primary ">Copyright &copy; YourShop</Col>
-          </Row>
-        </Container>
-      </footer>
+      <Foother />
     </>
   );
 };

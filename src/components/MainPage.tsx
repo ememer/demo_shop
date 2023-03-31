@@ -1,5 +1,6 @@
 import React from 'react';
 
+import BenefitsSection from './BenefitsSection';
 // import CardGrids from './CardsGrid';
 import ShowBox from './ShowBox';
 
@@ -40,6 +41,7 @@ const MainPage = () => {
         </div>
       </div>
       <ShowBox />
+      <BenefitsSection />
       {/* <CardGrids /> */}
     </>
   );
