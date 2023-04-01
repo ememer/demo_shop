@@ -6,7 +6,7 @@ const BenefitsSection = () => {
   return (
     <div className="row">
       <div className="col-12 min-vh-30 d-flex align-items-center justify-content-center">
-        <div className="row row-cols-3 text-center">
+        <div className="row row-cols-1 row-cols-lg-3 text-center">
           <div className="col">
             <BoxSeamFill className="col-12 fs-2 my-4" />
             <h5 className="col-12 fw-bold my-2">Free shipment</h5>

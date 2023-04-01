@@ -40,7 +40,16 @@ $custom-Color: (
 
 $theme-colors: map-merge($theme-colors, $custom-Color);
 
+$zindex-levels: (
+  n1: -1,
+  0: 0,
+  1: 1,
+  2: 2,
+  3: 3,
+);
+
 // Required
+
 @import '../node_modules/bootstrap/scss/variables';
 @import '../node_modules/bootstrap/scss/maps';
 @import '../node_modules/bootstrap/scss/mixins';
@@ -54,6 +63,16 @@ $utilities: map-merge(
     'cursor': (
       property: cursor,
       values: auto default pointer wait text move help not-allowed,
+    ),
+  )
+);
+$utilities: map-merge(
+  $utilities,
+  (
+    'z-index': (
+      property: z-index,
+      class: z,
+      values: $zindex-levels,
     ),
   )
 );
