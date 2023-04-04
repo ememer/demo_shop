@@ -1,12 +1,29 @@
 import React from 'react';
 
+import { useQuery } from '@apollo/react-hooks';
+import gql from 'graphql-tag';
+
 import BenefitsSection from './BenefitsSection';
-// import CardGrids from './CardsGrid';
 import ShowBox from './ShowBox';
 
 import '../sass/custom/MainPage.scss';
 
+const RESTAURANTS_QUERY = gql`
+  query Restaurants {
+    restaurants {
+      data {
+        attributes {
+          Name
+        }
+      }
+    }
+  }
+`;
+
 const MainPage = () => {
+  const { data } = useQuery(RESTAURANTS_QUERY);
+  console.log(data);
+
   return (
     <>
       <div
@@ -42,7 +59,6 @@ const MainPage = () => {
       </div>
       <ShowBox />
       <BenefitsSection />
-      {/* <CardGrids /> */}
     </>
   );
 };
