@@ -3,26 +3,15 @@ import React from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 
-import BenefitsSection from './BenefitsSection';
+// import BenefitsSection from './BenefitsSection';
 import ShowBox from './ShowBox';
 
 import '../sass/custom/MainPage.scss';
 
-const RESTAURANTS_QUERY = gql`
-  query Restaurants {
-    restaurants {
-      data {
-        attributes {
-          Name
-        }
-      }
-    }
-  }
-`;
-
 const MainPage = () => {
-  const { data } = useQuery(RESTAURANTS_QUERY);
-  console.log(data);
+  const { data } = useQuery(PRODUCTS_QUERY);
+
+  const products = data?.products?.data[0]?.attributes ?? [];
 
   return (
     <>
@@ -57,10 +46,53 @@ const MainPage = () => {
           </button>
         </div>
       </div>
-      <ShowBox />
-      <BenefitsSection />
+      <ShowBox products={products} />
+      {/* <BenefitsSection /> */}
     </>
   );
 };
 
 export default MainPage;
+
+const PRODUCTS_QUERY = gql`
+  query Products {
+    products {
+      data {
+        attributes {
+          name
+          price
+          model_products {
+            data {
+              attributes {
+                product_model
+              }
+            }
+          }
+          product_images {
+            data {
+              attributes {
+                url
+                alternativeText
+                formats
+              }
+            }
+          }
+          product_configurations {
+            data {
+              attributes {
+                configuration
+                configuration_picture {
+                  data {
+                    attributes {
+                      formats
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;
