@@ -9,32 +9,36 @@ export type ProductsQuery = {
             attributes: {
               product_model: string;
             };
-          };
+          }[];
         };
         product_images: {
           data: {
             attributes: {
               url: string;
               alternativeText: string;
-              formats?: unknown;
+              formats?: {
+                [key: string]: any;
+              };
             };
-          };
+          }[];
         };
-        product_configuration: {
+        product_configurations: {
           data: {
             attributes: {
               configuration: string;
               configuration_picture?: {
                 data: {
                   attributes: {
-                    formats: unknown;
+                    formats?: {
+                      [key: string]: any;
+                    };
                   };
                 };
               };
             };
-          };
+          }[];
         };
       };
-    };
+    }[];
   };
 };

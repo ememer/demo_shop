@@ -3,12 +3,15 @@ import { useState } from 'react';
 import { ProductsQuery } from '../types/ProductsQuery';
 import { SITE_URL } from '../utils/siteUrl';
 
-const ShowBox = ({ products }: ProductsQuery['data']) => {
+interface Props {
+  products: ProductsQuery['products']['data'][0]['attributes'];
+}
+
+const ShowBox = ({ products }: Props) => {
   const [selectValue, setSelectValue] = useState('Select');
   const modelSelect = products?.model_products?.data ?? [];
   const productImages = products?.product_images?.data ?? [];
   const productConfiguration = products?.product_configurations?.data ?? [];
-  console.log(products);
 
   return (
     <div className="my-5 p-1">
@@ -122,8 +125,8 @@ const ShowBox = ({ products }: ProductsQuery['data']) => {
               </div>
             </div>
             <p className="col-12 my-4 fw-bold p-0">Polecane:</p>
-            {/* <div className="col-12 border-top border-dark">
-              {products.map((product, idx) => (
+            <div className="col-12 border-top border-dark">
+              {[1, 2, 3].map((num, idx) => (
                 <div
                   key={idx}
                   className="row d-flex align-items-center border border-top-0 border-dark px-2 py-4 gap-3"
@@ -132,19 +135,13 @@ const ShowBox = ({ products }: ProductsQuery['data']) => {
                     <img
                       className="img-fluid p-0 rounded-2"
                       alt="jakiestamZdjecie"
-                      src={`${import.meta.env.VITE_APP_BACKEND_URL}${
-                        product?.attributes?.restaurant_photo?.data[0]?.attributes?.url
-                      }`}
+                      src="https://picsum.photos/900"
                     />
                   </div>
                   <div className="col-12 col-lg-6 text-center text-lg-start">
                     <div className="row">
-                      <h5 className="col-12 fs-6 fw-bold px-0">
-                        {product.attributes.Name}
-                      </h5>
-                      <p className="col-12 fs-semibold text-dark">
-                        {product.attributes.Description}
-                      </p>
+                      <h5 className="col-12 fs-6 fw-bold px-0">Text</h5>
+                      <p className="col-12 fs-semibold text-dark">13,44$</p>
                     </div>
                   </div>
                   <button className="col-10 mx-auto col-lg-2 border-0 rounded-4 h-50 py-2 py-lg-1">
@@ -152,7 +149,7 @@ const ShowBox = ({ products }: ProductsQuery['data']) => {
                   </button>
                 </div>
               ))}
-            </div> */}
+            </div>
           </div>
         </div>
       </div>

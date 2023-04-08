@@ -3,6 +3,8 @@ import React from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 
+import { ProductsQuery } from '../types/ProductsQuery';
+
 // import BenefitsSection from './BenefitsSection';
 import ShowBox from './ShowBox';
 
@@ -11,7 +13,7 @@ import '../sass/custom/MainPage.scss';
 const MainPage = () => {
   const { data } = useQuery(PRODUCTS_QUERY);
 
-  const products = data?.products?.data[0]?.attributes ?? [];
+  const products = (data as ProductsQuery)?.products?.data[0]?.attributes ?? [];
 
   return (
     <>
