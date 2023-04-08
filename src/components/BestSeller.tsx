@@ -1,16 +1,24 @@
 import { useState } from 'react';
 
+import { gql, useQuery } from '@apollo/react-hooks';
+
+import { BestSellerQuery } from '../types/BestSellerQuery';
 import { MainQuery } from '../types/MainQuery';
 import { SITE_URL } from '../utils/siteUrl';
-
 interface Props {
   products: MainQuery['products']['data'][0]['attributes'];
 }
 
-const ShowBox = ({ products }: Props) => {
+const BestSeller = ({ products }: Props) => {
+  const { data } = useQuery(BESTSELLER_QUERY);
   const [selectValue, setSelectValue] = useState('Select');
-  const modelSelect = products?.model_products?.data ?? [];
-  const productImages = products?.product_images?.data ?? [];
+  const [selectedPhoto, setSelectedPhoto] = useState(0);
+
+  const bestSeller =
+    (data as BestSellerQuery)?.products?.data[0]?.attributes?.Product ?? [];
+
+  const modelSelect = bestSeller?.phone_models?.data ?? [];
+  const productImages = bestSeller?.photos?.data ?? [];
   const productConfiguration = products?.product_configurations?.data ?? [];
 
   return (
@@ -19,20 +27,24 @@ const ShowBox = ({ products }: Props) => {
         <div className="col-12 col-lg-5 p-0">
           <img
             className="img-fluid rounded-4 min-vh-70"
-            alt={productImages[0]?.attributes?.alternativeText}
-            src={`${SITE_URL}${productImages[0]?.attributes?.url}`}
+            alt={
+              bestSeller?.photos?.data[selectedPhoto].attributes.alternativeText ??
+              `Zdjęcie produktu${selectedPhoto + 1}`
+            }
+            src={`${SITE_URL}${bestSeller?.photos?.data[selectedPhoto].attributes.url}`}
           />
 
           <div className="row row-cols-5 px-4 my-2">
-            {productImages.map((productImage) => (
+            {productImages.map((productImage, index) => (
               <button
-                key={productImage?.attributes?.alternativeText}
+                key={index}
+                onClick={() => setSelectedPhoto(index)}
                 className="col-3 col-lg btn border-0 p-0 bg-transparent  min-vh-10 overflow-hidden p-2"
               >
                 <img
                   className="col-12 img-fluid p-0 rounded-2"
-                  alt={productImage?.attributes?.alternativeText}
-                  src={`${SITE_URL}${productImage?.attributes?.formats?.thumbnail?.url}`}
+                  alt={productImage?.attributes?.alternativeText ?? `Zdjęcie${index + 1}`}
+                  src={`${SITE_URL}${productImage?.attributes?.url}`}
                 />
               </button>
             ))}
@@ -41,7 +53,7 @@ const ShowBox = ({ products }: Props) => {
         {/* RIGHT SIDE */}
         <div className="col-12 col-md-6 py-4 px-3 mx-auto">
           <div className="row">
-            <h5 className="col-12 fw-bold fs-1 text-dark">{products.name}</h5>
+            <h5 className="col-12 fw-bold fs-1 text-dark">{bestSeller.title}</h5>
             <div
               style={{
                 fontSize: '0.8rem',
@@ -54,7 +66,7 @@ const ShowBox = ({ products }: Props) => {
           </div>
           <div className="row">
             <div className="col-12 border-bottom fs-5 p-2 pb-4 my-3">
-              <span>{products.price}$</span>
+              <span>{bestSeller.price}PLN</span>
             </div>
             <div className="col-12 my-4 mb-1 px-0">
               <legend className="p-0 w-auto fw-light fs-6 m-0">Model:</legend>
@@ -69,10 +81,10 @@ const ShowBox = ({ products }: Props) => {
                 <option value="Select">Select</option>
                 {modelSelect?.map((model) => (
                   <option
-                    key={model.attributes.product_model}
-                    value={model.attributes.product_model}
+                    key={model.attributes.phone_model}
+                    value={model.attributes.phone_model}
                   >
-                    {model.attributes.product_model}
+                    {model.attributes.phone_model}
                   </option>
                 ))}
               </select>
@@ -157,4 +169,43 @@ const ShowBox = ({ products }: Props) => {
   );
 };
 
-export default ShowBox;
+export default BestSeller;
+
+const BESTSELLER_QUERY = gql`
+  query bestSeller {
+    products(filters: { Product: { bestseller: { eq: true } } }) {
+      data {
+        attributes {
+          Product {
+            title
+            stock
+            price
+            bestseller
+            phone_models {
+              data {
+                attributes {
+                  phone_model
+                }
+              }
+            }
+            category {
+              data {
+                attributes {
+                  name
+                }
+              }
+            }
+            photos {
+              data {
+                attributes {
+                  alternativeText
+                  url
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;

@@ -6,13 +6,12 @@ import gql from 'graphql-tag';
 import { MainQuery } from '../types/MainQuery';
 
 import BenefitsSection from './BenefitsSection';
-import ShowBox from './ShowBox';
+import BestSeller from './BestSeller';
 
 import '../sass/custom/MainPage.scss';
 
 const MainPage = () => {
   const { data } = useQuery(MAIN_PAGE_QUERY);
-  console.log(data);
 
   const products = (data?.products as MainQuery['products'])?.data[0]?.attributes ?? [];
 
@@ -49,7 +48,7 @@ const MainPage = () => {
           </button>
         </div>
       </div>
-      <ShowBox products={products} />
+      <BestSeller products={products} />
       <BenefitsSection />
     </>
   );
