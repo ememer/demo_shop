@@ -1,10 +1,10 @@
 import { useState } from 'react';
 
-import { ProductsQuery } from '../types/ProductsQuery';
+import { MainQuery } from '../types/MainQuery';
 import { SITE_URL } from '../utils/siteUrl';
 
 interface Props {
-  products: ProductsQuery['products']['data'][0]['attributes'];
+  products: MainQuery['products']['data'][0]['attributes'];
 }
 
 const ShowBox = ({ products }: Props) => {

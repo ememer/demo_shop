@@ -3,17 +3,18 @@ import React from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import gql from 'graphql-tag';
 
-import { ProductsQuery } from '../types/ProductsQuery';
+import { MainQuery } from '../types/MainQuery';
 
-// import BenefitsSection from './BenefitsSection';
+import BenefitsSection from './BenefitsSection';
 import ShowBox from './ShowBox';
 
 import '../sass/custom/MainPage.scss';
 
 const MainPage = () => {
-  const { data } = useQuery(PRODUCTS_QUERY);
+  const { data } = useQuery(MAIN_PAGE_QUERY);
+  console.log(data);
 
-  const products = (data as ProductsQuery)?.products?.data[0]?.attributes ?? [];
+  const products = (data?.products as MainQuery['products'])?.data[0]?.attributes ?? [];
 
   return (
     <>
@@ -49,15 +50,15 @@ const MainPage = () => {
         </div>
       </div>
       <ShowBox products={products} />
-      {/* <BenefitsSection /> */}
+      <BenefitsSection />
     </>
   );
 };
 
 export default MainPage;
 
-const PRODUCTS_QUERY = gql`
-  query Products {
+const MAIN_PAGE_QUERY = gql`
+  query MainPage {
     products {
       data {
         attributes {
