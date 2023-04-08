@@ -3,9 +3,11 @@ import React from 'react';
 import { gql, useQuery } from '@apollo/react-hooks';
 import { BoxSeamFill, Headset, TagFill } from 'react-bootstrap-icons';
 
+import { BenefitQuery } from '../types/BenefitsQuery';
+
 const BenefitsSection = () => {
   const { data } = useQuery(BENEFITS_QUERY);
-  const benefits = data?.benefitsSections?.data[0]?.attributes ?? [];
+  const benefits = (data as BenefitQuery)?.benefitsSections?.data[0]?.attributes ?? [];
   return (
     <div className="row">
       <div className="col-12 min-vh-30 d-flex align-items-center justify-content-center">
