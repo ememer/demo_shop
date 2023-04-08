@@ -7,6 +7,16 @@ export type BestSellerQuery = {
           stock: string;
           price: number;
           bestseller: boolean;
+          configuration: {
+            configuration_type: string;
+            configuration_picture: {
+              data: {
+                attributes: {
+                  url: string;
+                };
+              };
+            };
+          }[];
           phone_models: {
             data: {
               attributes: {

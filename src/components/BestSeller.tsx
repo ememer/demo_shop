@@ -3,23 +3,22 @@ import { useState } from 'react';
 import { gql, useQuery } from '@apollo/react-hooks';
 
 import { BestSellerQuery } from '../types/BestSellerQuery';
-import { MainQuery } from '../types/MainQuery';
 import { SITE_URL } from '../utils/siteUrl';
-interface Props {
-  products: MainQuery['products']['data'][0]['attributes'];
-}
 
-const BestSeller = ({ products }: Props) => {
+const BestSeller = () => {
   const { data } = useQuery(BESTSELLER_QUERY);
-  const [selectValue, setSelectValue] = useState('Select');
-  const [selectedPhoto, setSelectedPhoto] = useState(0);
-
   const bestSeller =
     (data as BestSellerQuery)?.products?.data[0]?.attributes?.Product ?? [];
 
   const modelSelect = bestSeller?.phone_models?.data ?? [];
   const productImages = bestSeller?.photos?.data ?? [];
-  const productConfiguration = products?.product_configurations?.data ?? [];
+  const productConfiguration = bestSeller?.configuration ?? [];
+  const [selectValue, setSelectValue] = useState('Select');
+  const [selectedPhoto, setSelectedPhoto] = useState(0);
+  const [chosenQuantity, setChosenQuantity] = useState(1);
+  const [configurationType, setConfigurationType] = useState(
+    productConfiguration[0]?.configuration_type ?? '',
+  );
 
   return (
     <div className="my-5 p-1">
@@ -29,7 +28,7 @@ const BestSeller = ({ products }: Props) => {
             className="img-fluid rounded-4 min-vh-70"
             alt={
               bestSeller?.photos?.data[selectedPhoto].attributes.alternativeText ??
-              `Zdjęcie produktu${selectedPhoto + 1}`
+              `Zdjęcie produktu ${selectedPhoto + 1}`
             }
             src={`${SITE_URL}${bestSeller?.photos?.data[selectedPhoto].attributes.url}`}
           />
@@ -43,7 +42,9 @@ const BestSeller = ({ products }: Props) => {
               >
                 <img
                   className="col-12 img-fluid p-0 rounded-2"
-                  alt={productImage?.attributes?.alternativeText ?? `Zdjęcie${index + 1}`}
+                  alt={
+                    productImage?.attributes?.alternativeText ?? `Zdjęcie ${index + 1}`
+                  }
                   src={`${SITE_URL}${productImage?.attributes?.url}`}
                 />
               </button>
@@ -91,21 +92,28 @@ const BestSeller = ({ products }: Props) => {
             </div>
             <div className="col-12 mt-4 mb-1 px-0">
               <legend className="p-0 w-auto fw-light fs-6 m-0">Color:</legend>
-              <span className="p-0 ms-2 fs-6">Black</span>
+              <span className="p-0 ms-2 fs-6">{configurationType}</span>
             </div>
             <div className="col-12 my-2">
               <div className="row row-cols-3 gap-3">
                 {productConfiguration.map((configuration) => (
                   <button
-                    key={configuration?.attributes?.configuration}
+                    onClick={() => {
+                      setConfigurationType(configuration?.configuration_type);
+                    }}
+                    key={configuration?.configuration_type}
                     className="col-3 btn border-0 p-0 bg-transparent rounded-3 min-vh-10 overflow-hidden"
-                    title={configuration?.attributes?.configuration}
+                    title={configuration?.configuration_type}
                   >
-                    <img
-                      className="col-12 img-fluid p-0"
-                      alt="jakiestamZdjecie"
-                      src={`${SITE_URL}${configuration?.attributes?.configuration_picture?.data?.attributes?.formats?.thumbnail?.url}`}
-                    />
+                    {configuration?.configuration_picture?.data?.attributes?.url ? (
+                      <img
+                        className="col-12 img-fluid p-0"
+                        alt="jakiestamZdjecie"
+                        src={`${SITE_URL}${configuration?.configuration_picture?.data?.attributes?.url}`}
+                      />
+                    ) : (
+                      <legend>{configuration?.configuration_type}</legend>
+                    )}
                   </button>
                 ))}
               </div>
@@ -115,11 +123,21 @@ const BestSeller = ({ products }: Props) => {
               <div className="row">
                 <div className="col-12 col-md-6 my-3">
                   <div className="row row-col-3 text-center rounded rounded-4  overflow-hidden">
-                    <button className="col-3 px-0 py-1 bg-primary border-0 text-white">
+                    <button
+                      onClick={() => {
+                        chosenQuantity > 1
+                          ? setChosenQuantity((prevState) => prevState - 1)
+                          : null;
+                      }}
+                      className="col-3 px-0 py-1 bg-primary border-0 text-white"
+                    >
                       -
                     </button>
-                    <div className="col px-0 py-1 bg-light">1</div>
-                    <button className="col-3 px-0 py-1 bg-primary border-0 text-white">
+                    <div className="col px-0 py-1 bg-light">{chosenQuantity}</div>
+                    <button
+                      onClick={() => setChosenQuantity((prevState) => prevState + 1)}
+                      className="col-3 px-0 py-1 bg-primary border-0 text-white"
+                    >
                       +
                     </button>
                   </div>
@@ -181,6 +199,16 @@ const BESTSELLER_QUERY = gql`
             stock
             price
             bestseller
+            configuration {
+              configuration_type
+              configuration_picture {
+                data {
+                  attributes {
+                    url
+                  }
+                }
+              }
+            }
             phone_models {
               data {
                 attributes {
