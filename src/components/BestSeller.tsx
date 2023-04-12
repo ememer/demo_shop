@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 import { gql, useQuery } from '@apollo/react-hooks';
+import clsx from 'clsx';
 
 import { BestSellerQuery } from '../types/BestSellerQuery';
 import { SITE_URL } from '../utils/siteUrl';
@@ -25,7 +26,8 @@ const BestSeller = () => {
       <div className="row row-cols-2 my-2 bg-white shadow-lg rounded rounded-5 gap-2 h-100 min-vh-70 p-4">
         <div className="col-12 col-lg-5 p-0">
           <img
-            className="img-fluid rounded-4 min-vh-70"
+            loading="lazy"
+            className="img-fluid rounded-4 min-vh-80 "
             alt={
               bestSeller?.photos?.data[selectedPhoto].attributes.alternativeText ??
               `Zdjęcie produktu ${selectedPhoto + 1}`
@@ -33,15 +35,23 @@ const BestSeller = () => {
             src={`${SITE_URL}${bestSeller?.photos?.data[selectedPhoto].attributes.url}`}
           />
 
-          <div className="row row-cols-5 px-4 my-2">
+          <div className="row row-cols-5 px-4 py-2 my-2 gap-3">
             {productImages.map((productImage, index) => (
               <button
                 key={index}
                 onClick={() => setSelectedPhoto(index)}
-                className="col-3 col-lg btn border-0 p-0 bg-transparent  min-vh-10 overflow-hidden p-2"
+                style={{
+                  transition: 'all 0.3s ease-in-out',
+                }}
+                className={clsx(
+                  'col-3 col-lg btn border-0 p-0 bg-transparent mx-auto overflow-hidden p-2',
+                  selectedPhoto === index &&
+                    'border-5 border-bottom border-end border-secondary',
+                  selectedPhoto !== index && 'border-5 border-bottom border-transparent',
+                )}
               >
                 <img
-                  className="col-12 img-fluid p-0 rounded-2"
+                  className="col-12 img-fluid img-thumbnail p-0 rounded-2 h-100"
                   alt={
                     productImage?.attributes?.alternativeText ?? `Zdjęcie ${index + 1}`
                   }
@@ -98,16 +108,25 @@ const BestSeller = () => {
               <div className="row row-cols-3 gap-3">
                 {productConfiguration.map((configuration) => (
                   <button
+                    style={{
+                      transition: 'all 0.5s ease-in-out',
+                    }}
                     onClick={() => {
                       setConfigurationType(configuration?.configuration_type);
                     }}
                     key={configuration?.configuration_type}
-                    className="col-3 btn border-0 p-0 bg-transparent rounded-3 min-vh-10 overflow-hidden"
+                    className={clsx(
+                      'col-3 btn border-0 p-0 bg-transparent rounded-3 min-vh-10 overflow-hidden',
+                      configurationType === configuration?.configuration_type &&
+                        'border-5 border-bottom border-end border-secondary',
+                      configurationType !== configuration?.configuration_type &&
+                        'border-5 border-bottom border-transparent',
+                    )}
                     title={configuration?.configuration_type}
                   >
                     {configuration?.configuration_picture?.data?.attributes?.url ? (
                       <img
-                        className="col-12 img-fluid p-0"
+                        className="col-12 img-fluid img-thumbnail rounded-3 border-0 p-1"
                         alt="jakiestamZdjecie"
                         src={`${SITE_URL}${configuration?.configuration_picture?.data?.attributes?.url}`}
                       />
