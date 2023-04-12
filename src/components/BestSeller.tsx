@@ -21,6 +21,22 @@ const BestSeller = () => {
     productConfiguration[0]?.configuration_type ?? '',
   );
 
+  const rangeOfQty = (e: React.ChangeEvent) => {
+    const target = e.target as HTMLInputElement;
+    const regex = /^\d+$/;
+    if (target.value === '') {
+      setChosenQuantity(1);
+      return;
+    }
+    if (regex.test(String(target.value))) {
+      if (+target.value < 0) {
+        setChosenQuantity(1);
+        return;
+      }
+      setChosenQuantity(+target.value);
+    }
+  };
+
   return (
     <div className="my-5 p-1">
       <div className="row row-cols-2 my-2 bg-white shadow-lg rounded rounded-5 gap-2 h-100 min-vh-70 p-4">
@@ -152,7 +168,13 @@ const BestSeller = () => {
                     >
                       -
                     </button>
-                    <div className="col px-0 py-1 bg-light">{chosenQuantity}</div>
+                    <input
+                      onFocus={(e) => e.currentTarget.select()}
+                      type="text"
+                      onChange={(e) => rangeOfQty(e)}
+                      className="col px-0 py-1 bg-light border-0 text-center form-control shadow-none"
+                      value={chosenQuantity}
+                    />
                     <button
                       onClick={() => setChosenQuantity((prevState) => prevState + 1)}
                       className="col-3 px-0 py-1 bg-primary border-0 text-white"
