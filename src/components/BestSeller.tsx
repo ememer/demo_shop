@@ -1,17 +1,24 @@
 import { useState } from 'react';
 
-import { ProductsQuery } from '../types/ProductsQuery';
+import { gql, useQuery } from '@apollo/react-hooks';
+
+import { BestSellerQuery } from '../types/BestSellerQuery';
 import { SITE_URL } from '../utils/siteUrl';
 
-interface Props {
-  products: ProductsQuery['products']['data'][0]['attributes'];
-}
+const BestSeller = () => {
+  const { data } = useQuery(BESTSELLER_QUERY);
+  const bestSeller =
+    (data as BestSellerQuery)?.products?.data[0]?.attributes?.Product ?? [];
 
-const ShowBox = ({ products }: Props) => {
+  const modelSelect = bestSeller?.phone_models?.data ?? [];
+  const productImages = bestSeller?.photos?.data ?? [];
+  const productConfiguration = bestSeller?.configuration ?? [];
   const [selectValue, setSelectValue] = useState('Select');
-  const modelSelect = products?.model_products?.data ?? [];
-  const productImages = products?.product_images?.data ?? [];
-  const productConfiguration = products?.product_configurations?.data ?? [];
+  const [selectedPhoto, setSelectedPhoto] = useState(0);
+  const [chosenQuantity, setChosenQuantity] = useState(1);
+  const [configurationType, setConfigurationType] = useState(
+    productConfiguration[0]?.configuration_type ?? '',
+  );
 
   return (
     <div className="my-5 p-1">
@@ -19,20 +26,26 @@ const ShowBox = ({ products }: Props) => {
         <div className="col-12 col-lg-5 p-0">
           <img
             className="img-fluid rounded-4 min-vh-70"
-            alt={productImages[0]?.attributes?.alternativeText}
-            src={`${SITE_URL}${productImages[0]?.attributes?.url}`}
+            alt={
+              bestSeller?.photos?.data[selectedPhoto].attributes.alternativeText ??
+              `Zdjęcie produktu ${selectedPhoto + 1}`
+            }
+            src={`${SITE_URL}${bestSeller?.photos?.data[selectedPhoto].attributes.url}`}
           />
 
           <div className="row row-cols-5 px-4 my-2">
-            {productImages.map((productImage) => (
+            {productImages.map((productImage, index) => (
               <button
-                key={productImage?.attributes?.alternativeText}
+                key={index}
+                onClick={() => setSelectedPhoto(index)}
                 className="col-3 col-lg btn border-0 p-0 bg-transparent  min-vh-10 overflow-hidden p-2"
               >
                 <img
                   className="col-12 img-fluid p-0 rounded-2"
-                  alt={productImage?.attributes?.alternativeText}
-                  src={`${SITE_URL}${productImage?.attributes?.formats?.thumbnail?.url}`}
+                  alt={
+                    productImage?.attributes?.alternativeText ?? `Zdjęcie ${index + 1}`
+                  }
+                  src={`${SITE_URL}${productImage?.attributes?.url}`}
                 />
               </button>
             ))}
@@ -41,7 +54,7 @@ const ShowBox = ({ products }: Props) => {
         {/* RIGHT SIDE */}
         <div className="col-12 col-md-6 py-4 px-3 mx-auto">
           <div className="row">
-            <h5 className="col-12 fw-bold fs-1 text-dark">{products.name}</h5>
+            <h5 className="col-12 fw-bold fs-1 text-dark">{bestSeller.title}</h5>
             <div
               style={{
                 fontSize: '0.8rem',
@@ -54,7 +67,7 @@ const ShowBox = ({ products }: Props) => {
           </div>
           <div className="row">
             <div className="col-12 border-bottom fs-5 p-2 pb-4 my-3">
-              <span>{products.price}$</span>
+              <span>{bestSeller.price}PLN</span>
             </div>
             <div className="col-12 my-4 mb-1 px-0">
               <legend className="p-0 w-auto fw-light fs-6 m-0">Model:</legend>
@@ -69,31 +82,38 @@ const ShowBox = ({ products }: Props) => {
                 <option value="Select">Select</option>
                 {modelSelect?.map((model) => (
                   <option
-                    key={model.attributes.product_model}
-                    value={model.attributes.product_model}
+                    key={model.attributes.phone_model}
+                    value={model.attributes.phone_model}
                   >
-                    {model.attributes.product_model}
+                    {model.attributes.phone_model}
                   </option>
                 ))}
               </select>
             </div>
             <div className="col-12 mt-4 mb-1 px-0">
               <legend className="p-0 w-auto fw-light fs-6 m-0">Color:</legend>
-              <span className="p-0 ms-2 fs-6">Black</span>
+              <span className="p-0 ms-2 fs-6">{configurationType}</span>
             </div>
             <div className="col-12 my-2">
               <div className="row row-cols-3 gap-3">
                 {productConfiguration.map((configuration) => (
                   <button
-                    key={configuration?.attributes?.configuration}
+                    onClick={() => {
+                      setConfigurationType(configuration?.configuration_type);
+                    }}
+                    key={configuration?.configuration_type}
                     className="col-3 btn border-0 p-0 bg-transparent rounded-3 min-vh-10 overflow-hidden"
-                    title={configuration?.attributes?.configuration}
+                    title={configuration?.configuration_type}
                   >
-                    <img
-                      className="col-12 img-fluid p-0"
-                      alt="jakiestamZdjecie"
-                      src={`${SITE_URL}${configuration?.attributes?.configuration_picture?.data?.attributes?.formats?.thumbnail?.url}`}
-                    />
+                    {configuration?.configuration_picture?.data?.attributes?.url ? (
+                      <img
+                        className="col-12 img-fluid p-0"
+                        alt="jakiestamZdjecie"
+                        src={`${SITE_URL}${configuration?.configuration_picture?.data?.attributes?.url}`}
+                      />
+                    ) : (
+                      <legend>{configuration?.configuration_type}</legend>
+                    )}
                   </button>
                 ))}
               </div>
@@ -103,11 +123,21 @@ const ShowBox = ({ products }: Props) => {
               <div className="row">
                 <div className="col-12 col-md-6 my-3">
                   <div className="row row-col-3 text-center rounded rounded-4  overflow-hidden">
-                    <button className="col-3 px-0 py-1 bg-primary border-0 text-white">
+                    <button
+                      onClick={() => {
+                        chosenQuantity > 1
+                          ? setChosenQuantity((prevState) => prevState - 1)
+                          : null;
+                      }}
+                      className="col-3 px-0 py-1 bg-primary border-0 text-white"
+                    >
                       -
                     </button>
-                    <div className="col px-0 py-1 bg-light">1</div>
-                    <button className="col-3 px-0 py-1 bg-primary border-0 text-white">
+                    <div className="col px-0 py-1 bg-light">{chosenQuantity}</div>
+                    <button
+                      onClick={() => setChosenQuantity((prevState) => prevState + 1)}
+                      className="col-3 px-0 py-1 bg-primary border-0 text-white"
+                    >
                       +
                     </button>
                   </div>
@@ -157,4 +187,53 @@ const ShowBox = ({ products }: Props) => {
   );
 };
 
-export default ShowBox;
+export default BestSeller;
+
+const BESTSELLER_QUERY = gql`
+  query bestSeller {
+    products(filters: { Product: { bestseller: { eq: true } } }) {
+      data {
+        attributes {
+          Product {
+            title
+            stock
+            price
+            bestseller
+            configuration {
+              configuration_type
+              configuration_picture {
+                data {
+                  attributes {
+                    url
+                  }
+                }
+              }
+            }
+            phone_models {
+              data {
+                attributes {
+                  phone_model
+                }
+              }
+            }
+            category {
+              data {
+                attributes {
+                  name
+                }
+              }
+            }
+            photos {
+              data {
+                attributes {
+                  alternativeText
+                  url
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+`;

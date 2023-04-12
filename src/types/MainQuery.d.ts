@@ -1,4 +1,4 @@
-export type ProductsQuery = {
+export type MainQuery = {
   products: {
     data: {
       attributes: {
