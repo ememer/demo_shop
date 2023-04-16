@@ -14,7 +14,7 @@ const BestSeller = () => {
   const bestSeller =
     (data as BestSellerQuery)?.products?.data[0]?.attributes?.Product ?? [];
   const publishedAt =
-    (data as BestSellerQuery)?.products?.data[0]?.attributes?.publishedAt ?? '';
+    (data as BestSellerQuery)?.products?.data[0]?.attributes?.updatedAt ?? '';
   const modelSelect = bestSeller?.phone_models?.data ?? [];
   const productImages = bestSeller?.photos?.data ?? [];
   const productConfiguration = bestSeller?.configuration ?? [];
@@ -270,7 +270,7 @@ const BESTSELLER_QUERY = gql`
     products(filters: { Product: { bestseller: { eq: true } } }) {
       data {
         attributes {
-          publishedAt
+          updatedAt
           Product {
             title
             stock
