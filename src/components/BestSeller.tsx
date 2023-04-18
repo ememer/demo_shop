@@ -11,10 +11,20 @@ import PhotoModal from './PhotoModal';
 
 const BestSeller = () => {
   const { data } = useQuery(BESTSELLER_QUERY);
+  const products = (data as BestSellerQuery)?.products?.data ?? [];
+  const filteredBestSeller = products?.filter(
+    (dataElement) => dataElement?.attributes?.Product?.bestseller === true,
+  );
+  // const filteredOtherProducts = products
+  //   ?.filter(
+  //     (dataElement) =>
+  //       dataElement.attributes.Product.title !==
+  //       filteredBestSeller[filteredBestSeller.length - 1]?.attributes?.Product?.title,
+  //   )
+  //   .sort(() => 0.5 - Math.random());
   const bestSeller =
-    (data as BestSellerQuery)?.products?.data[0]?.attributes?.Product ?? [];
-  const publishedAt =
-    (data as BestSellerQuery)?.products?.data[0]?.attributes?.updatedAt ?? '';
+    filteredBestSeller[filteredBestSeller.length - 1]?.attributes?.Product ?? [];
+  const publishedAt = filteredBestSeller[0]?.attributes?.updatedAt ?? '';
   const modelSelect = bestSeller?.phone_models?.data ?? [];
   const productImages = bestSeller?.photos?.data ?? [];
   const productConfiguration = bestSeller?.configuration ?? [];
@@ -23,10 +33,26 @@ const BestSeller = () => {
   const [chosenQuantity, setChosenQuantity] = useState<number | string>(1);
   const [configurationType, setConfigurationType] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [filteredOtherProducts, setFilteredOtherProducts] = useState<
+    BestSellerQuery['products']['data'] | []
+  >([]);
 
   useEffect(() => {
     setConfigurationType(productConfiguration[0]?.configuration_type);
   }, [productConfiguration[0]?.configuration_type]);
+
+  useEffect(() => {
+    const otherProducts = products
+      ?.filter(
+        (dataElement) =>
+          dataElement.attributes.Product.title !==
+          filteredBestSeller[filteredBestSeller.length - 1]?.attributes?.Product?.title,
+      )
+      .sort(() => 0.5 - Math.random());
+    if (otherProducts !== undefined) {
+      setFilteredOtherProducts(otherProducts);
+    }
+  }, [data]);
 
   const handleSetQty = (e: React.ChangeEvent) => {
     const target = e.target as HTMLInputElement;
@@ -230,23 +256,30 @@ const BestSeller = () => {
                 </div>
               </div>
               <p className="col-12 my-4 fw-bold p-0">Polecane:</p>
-              <div className="col-12 border-top border-dark">
-                {[1, 2, 3].map((num, idx) => (
+              <div className="col-12 border-top border-light">
+                {filteredOtherProducts.slice(0, 3).map((recentProduct, idx) => (
                   <div
                     key={idx}
-                    className="row d-flex align-items-center border border-top-0 border-dark px-2 py-4 gap-3"
+                    className="row d-flex align-items-center border border-top-0 border-light px-2 py-4 gap-3"
                   >
                     <div className="col-4 col-lg-3 mx-auto">
                       <img
                         className="img-fluid p-0 rounded-2"
-                        alt="jakiestamZdjecie"
-                        src="https://picsum.photos/900"
+                        alt={
+                          recentProduct.attributes.Product.photos.data[0].attributes
+                            .alternativeText
+                        }
+                        src={`${SITE_URL}${recentProduct.attributes.Product.photos.data[0].attributes.url}`}
                       />
                     </div>
                     <div className="col-12 col-lg-6 text-center text-lg-start">
                       <div className="row">
-                        <h5 className="col-12 fs-6 fw-bold px-0">Text</h5>
-                        <p className="col-12 fs-semibold text-dark">13,44$</p>
+                        <h5 className="col-12 fs-6 fw-bold px-0">
+                          {recentProduct.attributes.Product.title}
+                        </h5>
+                        <p className="col-12 fs-semibold text-dark">
+                          {recentProduct.attributes.Product.price}PLN
+                        </p>
                       </div>
                     </div>
                     <button className="col-10 mx-auto col-lg-2 border-0 rounded-4 h-50 py-2 py-lg-1">
@@ -265,9 +298,10 @@ const BestSeller = () => {
 
 export default BestSeller;
 
+// products(filters: { Product: { bestseller: { eq: true } } }) {
 const BESTSELLER_QUERY = gql`
   query bestSeller {
-    products(filters: { Product: { bestseller: { eq: true } } }) {
+    products {
       data {
         attributes {
           updatedAt
