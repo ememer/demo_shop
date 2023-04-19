@@ -2,6 +2,7 @@ export type BestSellerQuery = {
   products: {
     data: {
       attributes: {
+        updatedAt: Date;
         Product: {
           title: string;
           stock: string;

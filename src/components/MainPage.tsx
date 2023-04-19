@@ -27,7 +27,7 @@ const MainPage = () => {
             <img
               alt="Kategoria obudowy iPhone"
               src={`${SITE_URL}${leftColumn?.image?.data?.attributes?.url}`}
-              className="img-fluid img-thumbnail d-block mx-auto rounded-4 shadow h-100"
+              className="img-fluid img-thumbnail border-0 p-0 d-block mx-auto rounded-4 shadow h-100"
             />
             <div className="hover-overlay rounded-4" />
             <h5 className="col-12 position-absolute top-50 text-center text-white fw-bold fs-1">
@@ -41,7 +41,7 @@ const MainPage = () => {
             <img
               alt="Kategoria opaski na zegarek iWatch"
               src={`${SITE_URL}${rightColumn?.image?.data?.attributes?.url}`}
-              className="img-fluid img-thumbnail d-block mx-auto rounded-4 shadow h-100"
+              className="img-fluid img-thumbnail border-0 p-0 d-block mx-auto rounded-4 shadow h-100"
             />
             <div className="hover-overlay rounded-4" />
             <h5 className="col-12 position-absolute top-50 text-center text-white fw-bold fs-1">

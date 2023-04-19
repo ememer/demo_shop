@@ -1,6 +1,6 @@
 {
   "name": "vite-reactts-eslint-prettier",
-  "version": "0.0.0",
+  "version": "0.1.1",
   "scripts": {
     "dev": "vite",
     "build": "tsc && vite build",
@@ -16,6 +16,7 @@
     "apollo-boost": "^0.4.9",
     "bootstrap": "^5.2.3",
     "bootstrap-icons": "^1.10.3",
+    "clsx": "^1.2.1",
     "graphql": "^16.6.0",
     "react": "^17.0.2",
     "react-apollo": "^3.1.5",
