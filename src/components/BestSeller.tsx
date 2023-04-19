@@ -247,10 +247,10 @@ const BestSeller = () => {
               </div>
               <div className="col-12">
                 <div className="row row-cols-1 gy-4 gy-md-0 row-cols-md-2 justify-content-evenly">
-                  <button className="col-12 col-md-5 btn btn-primary border-0 rounded-5 py-4 text-white">
+                  <button className="col-12 col-md-5 btn btn-primary border-0 rounded-pill py-4 text-white">
                     Dodaj do koszyka
                   </button>
-                  <button className="col-12 col-md-5 btn btn-primary border-0 rounded-5 py-4 text-white">
+                  <button className="col-12 col-md-5 btn btn-primary border-0 rounded-pill py-4 text-white">
                     Kup teraz
                   </button>
                 </div>
