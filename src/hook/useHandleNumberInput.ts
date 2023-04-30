@@ -6,11 +6,9 @@ export const useHandleNumberInput = (initialValue: string | number) => {
     const target = e.target as HTMLInputElement;
     const result = target.value.replace(/\D/g, '');
     if (result === '0') {
-      setQuantity(1);
-      return;
+      setQuantity(initialValue);
     }
     setQuantity(result);
-    return;
   };
   return { quantity, setQuantity, handleNumberInput };
 };
