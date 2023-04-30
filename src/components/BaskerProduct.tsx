@@ -29,8 +29,10 @@ const BaskerProduct = ({ product, onClick }: Props) => {
           <h2 className="col-12 fs-6 fw-bold">{product.attributes.Product.title}</h2>
           <p className="fw-bold fs-6 mb-0">{`${
             quantity !== ''
-              ? product.attributes.Product.price * (quantity as number)
-              : product.attributes.Product.price * (product.quantity as number)
+              ? (product.attributes.Product.price * (quantity as number)).toFixed(2)
+              : (product.attributes.Product.price * (product.quantity as number)).toFixed(
+                  2,
+                )
           } PLN`}</p>
           <p style={{ fontSize: '12px' }} className="col-12">
             {product.configuration}
