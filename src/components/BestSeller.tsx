@@ -4,6 +4,8 @@ import { gql, useQuery } from '@apollo/react-hooks';
 import clsx from 'clsx';
 import { ZoomIn } from 'react-bootstrap-icons';
 
+import { useBasket } from '../hook/useBasket';
+import { useHandleNumberInput } from '../hook/useHandleNumberInput';
 import { BestSellerQuery } from '../types/BestSellerQuery';
 import { SITE_URL } from '../utils/siteUrl';
 
@@ -15,13 +17,6 @@ const BestSeller = () => {
   const filteredBestSeller = products?.filter(
     (dataElement) => dataElement?.attributes?.Product?.bestseller === true,
   );
-  // const filteredOtherProducts = products
-  //   ?.filter(
-  //     (dataElement) =>
-  //       dataElement.attributes.Product.title !==
-  //       filteredBestSeller[filteredBestSeller.length - 1]?.attributes?.Product?.title,
-  //   )
-  //   .sort(() => 0.5 - Math.random());
   const bestSeller =
     filteredBestSeller[filteredBestSeller.length - 1]?.attributes?.Product ?? [];
   const publishedAt = filteredBestSeller[0]?.attributes?.updatedAt ?? '';
@@ -30,16 +25,22 @@ const BestSeller = () => {
   const productConfiguration = bestSeller?.configuration ?? [];
   const [selectValue, setSelectValue] = useState('Select');
   const [selectedPhoto, setSelectedPhoto] = useState(0);
-  const [chosenQuantity, setChosenQuantity] = useState<number | string>(1);
+
   const [configurationType, setConfigurationType] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [filteredOtherProducts, setFilteredOtherProducts] = useState<
     BestSellerQuery['products']['data'] | []
   >([]);
+  const { quantity, setQuantity, handleNumberInput } = useHandleNumberInput(1);
+  const { createBasket } = useBasket();
+
+  // Set default configuration at render
 
   useEffect(() => {
     setConfigurationType(productConfiguration[0]?.configuration_type);
   }, [productConfiguration[0]?.configuration_type]);
+
+  // Set recent products at render
 
   useEffect(() => {
     const otherProducts = products
@@ -54,16 +55,6 @@ const BestSeller = () => {
     }
   }, [data]);
 
-  const handleSetQty = (e: React.ChangeEvent) => {
-    const target = e.target as HTMLInputElement;
-    const result = target.value.replace(/\D/g, '');
-    if (result === '0') {
-      setChosenQuantity(1);
-      return;
-    }
-    setChosenQuantity(result as number | string);
-    return;
-  };
   const now = new Date();
   const publishDate = new Date(publishedAt);
   const diffTime = Math.floor(Math.abs((now as any) - (publishDate as any)) / 86400000);
@@ -213,8 +204,8 @@ const BestSeller = () => {
                     <div className="row row-col-3 text-center rounded rounded-4  overflow-hidden">
                       <button
                         onClick={() => {
-                          (chosenQuantity as number) > 1
-                            ? setChosenQuantity((prevState) => (+prevState as number) - 1)
+                          (quantity as number) > 1
+                            ? setQuantity((prevState) => (+prevState as number) - 1)
                             : null;
                         }}
                         className="col-3 px-0 py-1 bg-primary border-0 text-white"
@@ -223,19 +214,19 @@ const BestSeller = () => {
                       </button>
                       <input
                         onBlur={(e) =>
-                          e.target.value.length === 0 ? setChosenQuantity(1) : null
+                          e.target.value.length === 0 ? setQuantity(1) : null
                         }
                         autoComplete="off"
                         inputMode="numeric"
                         onFocus={(e) => e.currentTarget.select()}
                         type="text"
-                        onChange={(e) => handleSetQty(e)}
+                        onChange={(e) => handleNumberInput(e)}
                         className="col px-0 py-1 bg-light border-0 text-center form-control shadow-none"
-                        value={chosenQuantity}
+                        value={quantity}
                       />
                       <button
                         onClick={() =>
-                          setChosenQuantity((prevState) => (+prevState as number) + 1)
+                          setQuantity((prevState) => (+prevState as number) + 1)
                         }
                         className="col-3 px-0 py-1 bg-primary border-0 text-white"
                       >
@@ -247,7 +238,17 @@ const BestSeller = () => {
               </div>
               <div className="col-12">
                 <div className="row row-cols-1 gy-4 gy-md-0 row-cols-md-2 justify-content-evenly">
-                  <button className="col-12 col-md-5 btn btn-primary border-0 rounded-pill py-4 text-white">
+                  <button
+                    onClick={() =>
+                      createBasket(
+                        quantity as number,
+                        configurationType,
+                        products,
+                        bestSeller,
+                      )
+                    }
+                    className="col-12 col-md-5 btn btn-primary border-0 rounded-pill py-4 text-white"
+                  >
                     Dodaj do koszyka
                   </button>
                   <button className="col-12 col-md-5 btn btn-primary border-0 rounded-pill py-4 text-white">
@@ -298,7 +299,6 @@ const BestSeller = () => {
 
 export default BestSeller;
 
-// products(filters: { Product: { bestseller: { eq: true } } }) {
 const BESTSELLER_QUERY = gql`
   query bestSeller {
     products {
