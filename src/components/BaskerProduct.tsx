@@ -1,7 +1,8 @@
-import React from 'react';
+import { useContext } from 'react';
 
+import { OrderContext } from '../context/OrderContext';
 import { useHandleNumberInput } from '../hook/useHandleNumberInput';
-import { Order } from '../types/OrderTypes';
+import { Order, OrderTypes } from '../types/OrderTypes';
 import { SITE_URL } from '../utils/siteUrl';
 
 interface Props {
@@ -14,6 +15,25 @@ const BaskerProduct = ({ product, onClick }: Props) => {
   const { quantity, setQuantity, handleNumberInput } = useHandleNumberInput(
     product?.quantity,
   );
+  const { basket, setBasket } = useContext(OrderContext) as OrderTypes;
+
+  const updateBasketItems = (product: Order) => {
+    const currentItem = basket.find(
+      (basketItem) =>
+        basketItem.attributes.Product.title === product.attributes.Product.title &&
+        basketItem.configuration === product.configuration,
+    );
+    const currentItemIndex = basket.indexOf(currentItem as Order);
+
+    setBasket((prevState) =>
+      prevState.map((item, index) => {
+        if (index === currentItemIndex) {
+          return { ...currentItem, quantity: quantity } as Order;
+        }
+        return item;
+      }),
+    );
+  };
 
   return (
     <div className="row gap-2 align-items-center mb-4">
@@ -42,9 +62,11 @@ const BaskerProduct = ({ product, onClick }: Props) => {
       <div className="col-1 mx-auto">
         <div className="row">
           <input
-            className="my-2 border border-light rounded-1 text-center"
+            className="my-2 border border-light rounded-1 text-center px-0"
             onBlur={(e) =>
-              e.target.value.length === 0 ? setQuantity(product.quantity) : null
+              e.target.value.length === 0
+                ? setQuantity(product.quantity)
+                : updateBasketItems(product)
             }
             value={quantity}
             onChange={(e) => {
