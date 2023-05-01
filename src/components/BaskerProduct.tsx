@@ -8,10 +8,11 @@ import { SITE_URL } from '../utils/siteUrl';
 interface Props {
   product: Order;
   // eslint-disable-next-line no-unused-vars
-  onClick: (product: Order) => void;
+  onClick: (index: number) => void;
+  index: number;
 }
 
-const BaskerProduct = ({ product, onClick }: Props) => {
+const BaskerProduct = ({ product, onClick, index }: Props) => {
   const { quantity, setQuantity, handleNumberInput } = useHandleNumberInput(
     product?.quantity,
   );
@@ -21,6 +22,7 @@ const BaskerProduct = ({ product, onClick }: Props) => {
     const currentItem = basket.find(
       (basketItem) =>
         basketItem.attributes.Product.title === product.attributes.Product.title &&
+        basketItem.model === product.model &&
         basketItem.configuration === product.configuration,
     );
     const currentItemIndex = basket.indexOf(currentItem as Order);
@@ -47,15 +49,20 @@ const BaskerProduct = ({ product, onClick }: Props) => {
       <div className="col-7">
         <div className="row">
           <h2 className="col-12 fs-6 fw-bold">{product.attributes.Product.title}</h2>
-          <p className="fw-bold fs-6 mb-0">{`${
-            quantity !== ''
-              ? (product.attributes.Product.price * (quantity as number)).toFixed(2)
-              : (product.attributes.Product.price * (product.quantity as number)).toFixed(
-                  2,
-                )
-          } PLN`}</p>
+          <p className="fw-bold fs-6 mb-0">
+            {`${
+              quantity !== ''
+                ? (product.attributes.Product.price * (quantity as number)).toFixed(2)
+                : (
+                    product.attributes.Product.price * (product.quantity as number)
+                  ).toFixed(2)
+            } PLN`}
+          </p>
           <p style={{ fontSize: '12px' }} className="col-12">
-            {product.configuration}
+            {product.configuration} /{' '}
+            <span style={{ fontSize: '10px' }} className="fw-bold me-2">
+              {product.model}
+            </span>
           </p>
         </div>
       </div>
@@ -74,7 +81,7 @@ const BaskerProduct = ({ product, onClick }: Props) => {
             }}
           />
           <button
-            onClick={() => onClick(product)}
+            onClick={() => onClick(index)}
             style={{ fontSize: '12px' }}
             className="text-decoration-underline border-0 bg-transparent mx-auto my-2 p-0"
           >

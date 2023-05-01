@@ -1,3 +1,5 @@
+import { AnimatePresence } from 'framer-motion';
+
 import Layout from './components/Layout';
 import MainPage from './components/MainPage';
 
@@ -8,9 +10,11 @@ import './sass/style.scss';
 function App() {
   return (
     <div className="App clearfix bg-white">
-      <Layout>
-        <MainPage />
-      </Layout>
+      <AnimatePresence>
+        <Layout>
+          <MainPage />
+        </Layout>
+      </AnimatePresence>
     </div>
   );
 }

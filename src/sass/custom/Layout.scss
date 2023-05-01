@@ -1,3 +1,5 @@
+@import './../style.scss';
+
 .animated-icon2 span:nth-child(1) {
   top: 0px;
   background: #fff;
@@ -36,4 +38,24 @@
   top: 11px;
   width: 0%;
   left: 50%;
+}
+
+/* width */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: $fuchsia;
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }

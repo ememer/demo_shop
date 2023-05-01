@@ -8,6 +8,7 @@ import { BestSellerQuery } from './BestSellerQuery';
 type Order = BestSellerQuery['products']['data'][0] & {
   quantity: number;
   configuration: string;
+  model: string;
 };
 
 export type OrderTypes = {

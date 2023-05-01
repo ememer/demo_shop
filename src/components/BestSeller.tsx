@@ -23,7 +23,7 @@ const BestSeller = () => {
   const modelSelect = bestSeller?.phone_models?.data ?? [];
   const productImages = bestSeller?.photos?.data ?? [];
   const productConfiguration = bestSeller?.configuration ?? [];
-  const [selectValue, setSelectValue] = useState('Select');
+  const [selectedModel, setSelectedModel] = useState('Select');
   const [selectedPhoto, setSelectedPhoto] = useState(0);
 
   const [configurationType, setConfigurationType] = useState('');
@@ -145,8 +145,10 @@ const BestSeller = () => {
               </div>
               <div className="col-12 px-0 my-2 my-lg-0">
                 <select
-                  value={selectValue}
-                  onChange={(e) => setSelectValue((e.target as HTMLSelectElement).value)}
+                  value={selectedModel}
+                  onChange={(e) =>
+                    setSelectedModel((e.target as HTMLSelectElement).value)
+                  }
                   className="form-select cursor-pointer"
                 >
                   <option value="Select">Select</option>
@@ -245,6 +247,7 @@ const BestSeller = () => {
                         configurationType,
                         products,
                         bestSeller,
+                        selectedModel,
                       )
                     }
                     className="col-12 col-md-5 btn btn-primary border-0 rounded-pill py-4 text-white"

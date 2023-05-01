@@ -16,6 +16,7 @@ import '../sass/custom/Layout.scss';
 interface Props {
   children: React.ReactNode;
 }
+import { AnimatePresence } from 'framer-motion';
 
 const Layout = ({ children }: Props) => {
   const { basket, isBasketOpen, setIsBasketOpen } = useContext(
@@ -25,7 +26,9 @@ const Layout = ({ children }: Props) => {
 
   return (
     <>
-      {isBasketOpen && <BaskteModal onClick={setIsBasketOpen} />}
+      <AnimatePresence>
+        {isBasketOpen && <BaskteModal onClick={setIsBasketOpen} />}
+      </AnimatePresence>
       {mobileMenu && <MobileMenu onClick={setMobileMenu} />}
       <header>
         <div className="p-4 rounded-bottom bg-primary navbar fixed-top z-1 d-block">

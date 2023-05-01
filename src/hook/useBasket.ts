@@ -12,6 +12,7 @@ export const useBasket = () => {
     configuration: string,
     query: unknown,
     item: unknown,
+    model: string,
   ) => {
     const currentQuery = await query;
     const matchItem = (currentQuery as BestSellerQuery['products']['data']).find(
@@ -19,7 +20,7 @@ export const useBasket = () => {
         (element as BestSellerQuery['products']['data'][0]).attributes.Product === item,
     );
 
-    const newOrder = { ...matchItem, configuration, quantity } as Order;
+    const newOrder = { ...matchItem, configuration, quantity, model } as Order;
 
     if (basket.length === 0) {
       setBasket([newOrder]);
@@ -31,12 +32,14 @@ export const useBasket = () => {
         (order) =>
           order.attributes.Product === newOrder.attributes.Product &&
           order.configuration === newOrder.configuration &&
+          order.model === newOrder.model &&
           order.quantity !== newOrder.quantity,
       )
     ) {
       const bastekItems = basket.filter(
         (basketItem) =>
           basketItem.attributes.Product === newOrder.attributes.Product &&
+          basketItem.model === newOrder.model &&
           basketItem.configuration !== newOrder.configuration,
       );
 
@@ -49,6 +52,7 @@ export const useBasket = () => {
       basket.find(
         (order) =>
           order.attributes.Product === newOrder.attributes.Product &&
+          order.model === newOrder.model &&
           order.configuration === newOrder.configuration,
       )
     ) {
@@ -60,6 +64,7 @@ export const useBasket = () => {
         (order) =>
           order.attributes.Product === newOrder.attributes.Product &&
           order.configuration === newOrder.configuration &&
+          order.model === newOrder.model &&
           order.quantity === newOrder.quantity,
       )
     ) {
