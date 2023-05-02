@@ -52,21 +52,25 @@ const BaskteModal = ({ onClick }: Props) => {
         animate={{ x: 0 }}
         key="basketModalContent"
         transition={{ type: 'spring', stiffness: 50 }}
-        className="col-5 min-vh-90 bg-white mx-3 d-block rounded-2 shadow-lg p-4"
+        style={{ height: ' 90vh' }}
+        className="col-12 col-md-7 col-lg-5 bg-white mx-md-3 d-block rounded-2 shadow-lg p-4"
       >
-        <div className="row align-items-center justify-content-between">
+        <motion.div
+          key="basketModalList"
+          className="row align-items-center justify-content-between"
+        >
           <div className="col-12 mb-4">
-            <h2 className="col-11 d-inline-block fw-bold fs-5">Koszyk </h2>
+            <h2 className="col-10 col-md-11 d-inline-block fw-bold fs-5">Koszyk </h2>
             <button
               onClick={() => {
                 onClick(false);
               }}
-              className="col-1 w-auto d-inline-block border-0 bg-transparent"
+              className="col col-md-1 w-auto d-inline-block border-0 bg-transparent"
             >
               <BagX />
             </button>
           </div>
-        </div>
+        </motion.div>
         <div className="row">
           <div className="col-12" style={{ overflowY: 'scroll', height: '60vh' }}>
             {products.map((product, idx) => (
@@ -87,7 +91,9 @@ const BaskteModal = ({ onClick }: Props) => {
             </div>
           </div>
           <div className="col-12 d-flex justify-content-center my-4">
-            <button>Przejdź dalej</button>
+            <button className="bg-primary border-0 rounded-4 px-4 py-2 ms-auto text-light">
+              Przejdź dalej
+            </button>
           </div>
         </div>
       </motion.div>

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 
 import { gql, useQuery } from '@apollo/react-hooks';
 import clsx from 'clsx';
-import { ZoomIn } from 'react-bootstrap-icons';
+import { ExclamationDiamond, ZoomIn } from 'react-bootstrap-icons';
 
 import { useBasket } from '../hook/useBasket';
 import { useHandleNumberInput } from '../hook/useHandleNumberInput';
@@ -28,11 +28,34 @@ const BestSeller = () => {
 
   const [configurationType, setConfigurationType] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [validateError, setValidateErrror] = useState('');
   const [filteredOtherProducts, setFilteredOtherProducts] = useState<
     BestSellerQuery['products']['data'] | []
   >([]);
   const { quantity, setQuantity, handleNumberInput } = useHandleNumberInput(1);
   const { createBasket } = useBasket();
+
+  const validateBestSellerOrder = (
+    quantity: number,
+    configurationType: string,
+    products: unknown,
+    bestSeller: unknown,
+    selectedModel: string,
+  ) => {
+    if (selectedModel === 'Select') {
+      setValidateErrror('Choose model');
+      return;
+    }
+    setValidateErrror('');
+
+    createBasket(
+      quantity as number,
+      configurationType,
+      products,
+      bestSeller,
+      selectedModel,
+    );
+  };
 
   // Set default configuration at render
 
@@ -141,7 +164,6 @@ const BestSeller = () => {
               </div>
               <div className="col-12 my-4 mb-1 px-0">
                 <legend className="p-0 w-auto fw-light fs-6 m-0">Model:</legend>
-                <span className="p-0 ms-2 fs-6">Some model</span>
               </div>
               <div className="col-12 px-0 my-2 my-lg-0">
                 <select
@@ -161,6 +183,12 @@ const BestSeller = () => {
                     </option>
                   ))}
                 </select>
+                {validateError && selectedModel === 'Select' && (
+                  <span className="text-danger align-items-center">
+                    <ExclamationDiamond className="me-2" />
+                    {validateError}
+                  </span>
+                )}
               </div>
               <div className="col-12 mt-4 mb-1 px-0">
                 <legend className="p-0 w-auto fw-light fs-6 m-0">Color:</legend>
@@ -242,7 +270,7 @@ const BestSeller = () => {
                 <div className="row row-cols-1 gy-4 gy-md-0 row-cols-md-2 justify-content-evenly">
                   <button
                     onClick={() =>
-                      createBasket(
+                      validateBestSellerOrder(
                         quantity as number,
                         configurationType,
                         products,
