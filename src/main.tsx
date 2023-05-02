@@ -1,18 +1,22 @@
 import React from 'react';
 
 import { ApolloProvider } from '@apollo/react-hooks';
-import ReactDOM from 'react-dom';
+import { createRoot } from 'react-dom/client';
 
 import App from './App';
+import OrderContexProvider from './context/OrderContextProvider';
 import client from './utils/apolloClient';
 
 import './index.css';
 
-ReactDOM.render(
+const container = document.getElementById('root');
+const root = createRoot(container as HTMLElement);
+root.render(
   <React.StrictMode>
     <ApolloProvider client={client}>
-      <App />
+      <OrderContexProvider>
+        <App />
+      </OrderContexProvider>
     </ApolloProvider>
   </React.StrictMode>,
-  document.getElementById('root'),
 );
